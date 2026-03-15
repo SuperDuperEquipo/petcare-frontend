@@ -3,10 +3,10 @@ import { RequireAuth, RequireAdmin, RequireOwner } from './components/Guards';
 import Login    from './pages/Login';
 import Register from './pages/Register';
 
-// TODO: reemplaza estos placeholders con tus páginas reales
-const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard 🐾</h1>;
-const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin 🔒</h1>;
-const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueño 🏠</h1>;
+// TODO: reemplazar estos placeholders con las páginas reales
+const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
+const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
+const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueño</h1>;
 
 function App() {
   return (
