@@ -36,16 +36,14 @@ function Navbar({ isLoggedIn = false, role, onLogout }: NavbarProps) {
             <NavLink to="/mascotas" className={linkClass}>
               Mascotas
             </NavLink>
-            <NavLink to="/appointments" className={linkClass}>
+            <NavLink to="/citas" className={linkClass}>
               Citas
             </NavLink>
-            <NavLink to="/vaccines" className={linkClass}>
-              Vacunas
-            </NavLink>
+
             <NavLink to="/tips" className={linkClass}>
               Tips
             </NavLink>
-            <NavLink to="/profile" className={linkClass}>
+            <NavLink to="/perfil" className={linkClass}>
               Perfil
             </NavLink>
           </>
@@ -62,7 +60,7 @@ function Navbar({ isLoggedIn = false, role, onLogout }: NavbarProps) {
             <NavLink to="/admin/tips" className={linkClass}>
               Tips
             </NavLink>
-            <NavLink to="/admin/perfil" className={linkClass}>
+            <NavLink to="/perfil" className={linkClass}>
               Perfil
             </NavLink>
           </>

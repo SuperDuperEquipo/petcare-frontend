@@ -27,7 +27,6 @@ import VaccineFormPage from "./pages/Vaccine/VaccineFormPage";
 
 // Dashboards / Placeholders
 const Dashboard = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
-const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
 
 //admin
 import AdminUsersPage from './pages/admin/AdminUsersPage'
@@ -83,21 +82,20 @@ function App() {
             <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
             <Route path="/perfil/editar" element={<ProfileFormPage />} />
 
+            <Route path="/tips" element={<TipsPage />} />
+
             {/* Rutas de Admin */}
             <Route element={<RequireAdmin />}>
-              <Route path="/admin/*" element={<AdminPanel />} />
+              <Route path="/admin " element={<AdminPage />} />
+              <Route path="/admin/tips" element={<AdminTipsPage />} />
+              <Route path="/admin/users" element={<AdminUsersPage/>} />
             </Route>
           </Route>
         </Route>
 
         {/* Fallback para rutas inexistentes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-            <Route path="/admin/users" element={<AdminUsersPage />} />
-            <Route path="/tips" element={<TipsPage />} />
-            <Route path="/admin/tips" element={<AdminTipsPage />} />
-            <Route path="/admin" element={<AdminPage/>} />
-
-      </Routes>
+        </Routes>
     </AuthProvider>
   );
 }

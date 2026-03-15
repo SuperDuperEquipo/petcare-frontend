@@ -31,7 +31,7 @@ function TipsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="lex justify-between items-end mb-12">
+      <div className="flex justify-between items-end mb-12">
       <h1 className="font-display text-4xl font-semibold text-petDark tracking-tight mb-1">
         Tips para mascotas
       </h1>

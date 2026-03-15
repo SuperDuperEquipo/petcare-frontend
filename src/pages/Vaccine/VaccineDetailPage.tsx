@@ -19,7 +19,10 @@ export default function VaccineDetailPage() {
 
   useEffect(() => {
     setLoading(true)
-    if (!vaccineId) return
+    if (!vaccineId) {
+      setLoading(false)
+      return
+    }
     getVaccine(Number(vaccineId))
       .then(setVaccine)
       .catch(() => setToast({ message: 'No se pudo cargar la vacuna', type: 'error' }))
