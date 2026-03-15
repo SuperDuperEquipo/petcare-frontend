@@ -3,6 +3,7 @@ export interface User {
     name: string;
     email: string;
     role: 'user' | 'owner' | 'admin';
+    owner_id?: number;
     is_active: boolean;
     created_at: string;
 }
