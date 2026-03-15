@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react"
+import { X } from "lucide-react"
+
 type ToastProps = {
   message: string
   type?: "success" | "error" | "warning" | "info"
@@ -5,26 +8,44 @@ type ToastProps = {
 }
 
 function Toast({ message, type = "info", onClose }: ToastProps) {
-  const baseStyle = "fixed top-5 right-5 px-4 py-3 rounded shadow-lg text-white"
+  const [visible, setVisible] = useState(false)
 
-  const typeStyles = {
-    success: "bg-green-500",
-    error: "bg-red-500",
-    warning: "bg-yellow-500",
-    info: "bg-blue-500"
+  useEffect(() => {
+    setVisible(true)
+    const timer = setTimeout(() => {
+      setVisible(false)
+      setTimeout(onClose, 300) 
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [onClose])
+
+  const baseStyle =
+    "fixed top-5 right-5 z-50 max-w-xs w-full px-4 py-3 rounded-xl shadow-lg text-white flex items-center justify-between gap-3 transform transition-all duration-300"
+
+  const typeStyles: Record<string, string> = {
+    success: "bg-petIndigo",
+    error: "bg-petPink",
+    warning: "bg-yellow-400 text-black",
+    info: "bg-petIndigoLight text-petDark"
   }
 
   return (
-    <div className={`${baseStyle} ${typeStyles[type]}`}>
-      <div className="flex items-center gap-4">
-        <span>{message}</span>
-        <button
-          onClick={onClose}
-          className="font-bold"
-        >
-          ✕
-        </button>
-      </div>
+    <div
+      className={`${baseStyle} ${typeStyles[type]} ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+      }`}
+    >
+      <span className="flex-1 text-sm">{message}</span>
+      <button
+        onClick={() => {
+          setVisible(false)
+          setTimeout(onClose, 300)
+        }}
+        className="p-1 rounded-full hover:bg-white/20 transition"
+      >
+        <X size={16} />
+      </button>
     </div>
   )
 }
