@@ -33,3 +33,7 @@ export const updatePet = async (id: number, payload: Partial<PetPayload>): Promi
 export const deletePet = async (id: number): Promise<void> => {
   await axiosClient.delete(`/pets/${id}`);
 };
+
+export const assignPetToOwner = async (petId: number, ownerId: number): Promise<void> => {
+  await axiosClient.post(`/pets/${petId}/owners/${ownerId}`);
+};

@@ -1,41 +1,39 @@
+import { Link } from "react-router-dom";
+
 type NavbarProps = {
-  isLoggedIn?: boolean
-  onLogout?: () => void
-}
+  isLoggedIn?: boolean;
+  onLogout?: () => void;
+};
 
 function Navbar({ isLoggedIn = false, onLogout }: NavbarProps) {
   return (
     <nav className="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
-
-      <div className="text-lg font-semibold">
-        PetCare
-      </div>
+      <div className="text-lg font-semibold">PetCare</div>
 
       <div className="flex items-center gap-6">
-
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/mascotas" className="hover:text-gray-200">
           Inicio
-        </a>
+        </Link>
 
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/mascotas" className="hover:text-gray-200">
           Mascotas
-        </a>
+        </Link>
 
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/citas" className="hover:text-gray-200">
           Citas
-        </a>
+        </Link>
 
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/vacunas" className="hover:text-gray-200">
           Vacunas
-        </a>
+        </Link>
 
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/tips" className="hover:text-gray-200">
           Tips
-        </a>
+        </Link>
 
-        <a href="#" className="hover:text-gray-200">
+        <Link to="/perfil" className="hover:text-gray-200">
           Perfil
-        </a>
+        </Link>
 
         {isLoggedIn ? (
           <button
@@ -49,11 +47,9 @@ function Navbar({ isLoggedIn = false, onLogout }: NavbarProps) {
             Iniciar Sesión
           </button>
         )}
-
       </div>
-
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

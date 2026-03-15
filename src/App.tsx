@@ -1,60 +1,73 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { RequireAuth, RequireAdmin, RequireOwner } from './components/Guards';
-import MainLayout from './layout/Mainlayout';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { RequireAuth, RequireAdmin, RequireOwner } from "./components/Guards";
+import MainLayout from "./layout/Mainlayout";
 
 // Auth
-import Login    from './pages/Login';
-import Register from './pages/Register';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-// Pets
-import PetsPage      from './pages/pets/PetsPage';
-import PetDetailPage from './pages/pets/PetDetailPage';
-import PetFormPage   from './pages/pets/PetFormPage';
+// Mascotas
+import PetsPage from "./pages/pets/PetsPage";
+import PetDetailPage from "./pages/pets/PetDetailPage";
+import PetFormPage from "./pages/pets/PetFormPage";
 
-// TODO: reemplazar estos placeholders con páginas reales
-const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
+// Citas
+import AppointmentsPage from "./pages/appointments/AppointmentsPage";
+import AppointmentFormPage from "./pages/appointments/AppointmentFormPage";
+import AppointmentDetailPage from "./pages/appointments/AppointmentDetailPage";
+
+// Perfil
+import ProfilePage from "./pages/profile/ProfilePage";
+import ProfileFormPage from "./pages/profile/ProfileFormPage";
+
+// Dashboards / Placeholders
+const Dashboard = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
 const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
-const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueno</h1>;
 
 function App() {
   return (
-    <Routes>
-      {/* -- Rutas públicas (sin layout) --------------- */}
-      <Route path="/login"    element={<Login />} />
-      <Route path="/register" element={<Register />} />
+    <AuthProvider>
+      <Routes>
+        {/* -- Rutas públicas --------------------------- */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* -- Rutas protegidas: requieren sesión -------- */}
-      <Route element={<RequireAuth />}>
-        <Route element={<MainLayout />}>
+        {/* -- Rutas protegidas (Requieren sesión) -------- */}
+        <Route element={<RequireAuth />}>
+          <Route element={<MainLayout />}>
+            {/* Redirección raíz */}
+            <Route path="/" element={<Navigate to="/mascotas" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* Redirección raíz */}
-          <Route path="/" element={<Navigate to="/mascotas" replace />} />
+            {/* Módulo Mascotas */}
+            <Route path="/mascotas" element={<PetsPage />} />
+            <Route path="/mascotas/nueva" element={<PetFormPage />} />
+            <Route path="/mascotas/:id" element={<PetDetailPage />} />
+            <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
 
-          {/* Dashboard general */}
-          <Route path="/dashboard" element={<Dashboard />} />
+            {/* Módulo Citas */}
+            <Route path="/citas" element={<AppointmentsPage />} />
+            <Route path="/citas/nueva" element={<AppointmentFormPage />} />
+            <Route path="/citas/:id" element={<AppointmentDetailPage />} />
+            <Route path="/citas/:id/editar" element={<AppointmentFormPage />} />
 
-          {/* Módulo Mascotas */}
-          <Route path="/mascotas"            element={<PetsPage />} />
-          <Route path="/mascotas/nueva"      element={<PetFormPage />} />
-          <Route path="/mascotas/:id"        element={<PetDetailPage />} />
-          <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
+            {/* Módulo Perfil / Owner */}
+            <Route path="/perfil" element={<ProfilePage />} />
+            <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
+            <Route path="/perfil/editar" element={<ProfileFormPage />} />
 
-          {/* Rutas de owner: role === 'owner' | 'admin' */}
-          <Route element={<RequireOwner />}>
-            <Route path="/owner/*" element={<OwnerPanel />} />
+            {/* Rutas de admin */}
+            <Route element={<RequireAdmin />}>
+              <Route path="/admin/*" element={<AdminPanel />} />
+            </Route>
           </Route>
-
-          {/* Rutas de admin: role === 'admin' únicamente */}
-          <Route element={<RequireAdmin />}>
-            <Route path="/admin/*" element={<AdminPanel />} />
-          </Route>
-
         </Route>
-      </Route>
 
-      {/* Fallback → login */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
