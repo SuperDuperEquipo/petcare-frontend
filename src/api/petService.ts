@@ -34,6 +34,7 @@ export const deletePet = async (id: number): Promise<void> => {
   await axiosClient.delete(`/pets/${id}`);
 };
 
-export const assignPetToOwner = async (petId: number, ownerId: number): Promise<void> => {
-  await axiosClient.post(`/pets/${petId}/owners/${ownerId}`);
+export const assignPetToOwner = async (petId: number, ownerId: number) => {
+  const { data } = await axiosClient.post(`/pets/${petId}/owners/${ownerId}`);
+  return data;
 };
