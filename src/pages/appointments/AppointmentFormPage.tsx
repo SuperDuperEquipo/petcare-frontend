@@ -39,7 +39,6 @@ export default function AppointmentFormPage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm<any>();
 
   useEffect(() => {
