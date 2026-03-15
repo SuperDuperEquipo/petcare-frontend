@@ -1,32 +1,54 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { RequireAuth, RequireAdmin, RequireOwner } from './components/Guards';
+import MainLayout from './layout/Mainlayout';
+
+// Auth
 import Login    from './pages/Login';
 import Register from './pages/Register';
 
-// TODO: reemplazar estos placeholders con las páginas reales
+// Pets
+import PetsPage      from './pages/pets/PetsPage';
+import PetDetailPage from './pages/pets/PetDetailPage';
+import PetFormPage   from './pages/pets/PetFormPage';
+
+// TODO: reemplazar estos placeholders con páginas reales
 const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
-const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
+const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin<h1>;
 const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueño</h1>;
 
 function App() {
   return (
     <Routes>
-      {/* ── Rutas públicas ───────────────────────────── */}
+      {/* ── Rutas públicas (sin layout) ─────────────── */}
       <Route path="/login"    element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* ── Rutas protegidas: cualquier usuario con sesión ── */}
+      {/* ── Rutas protegidas: requieren sesión ──────── */}
       <Route element={<RequireAuth />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<MainLayout />}>
 
-        {/* Rutas de owner: role === 'owner' | 'admin' */}
-        <Route element={<RequireOwner />}>
-          <Route path="/owner/*" element={<OwnerPanel />} />
-        </Route>
+          {/* Redirección raíz */}
+          <Route path="/" element={<Navigate to="/mascotas" replace />} />
 
-        {/* Rutas de admin: role === 'admin' únicamente */}
-        <Route element={<RequireAdmin />}>
-          <Route path="/admin/*" element={<AdminPanel />} />
+          {/* Dashboard general */}
+          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Módulo Mascotas */}
+          <Route path="/mascotas"            element={<PetsPage />} />
+          <Route path="/mascotas/nueva"      element={<PetFormPage />} />
+          <Route path="/mascotas/:id"        element={<PetDetailPage />} />
+          <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
+
+          {/* Rutas de owner: role === 'owner' | 'admin' */}
+          <Route element={<RequireOwner />}>
+            <Route path="/owner/*" element={<OwnerPanel />} />
+          </Route>
+
+          {/* Rutas de admin: role === 'admin' únicamente */}
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin/*" element={<AdminPanel />} />
+          </Route>
+
         </Route>
       </Route>
 
