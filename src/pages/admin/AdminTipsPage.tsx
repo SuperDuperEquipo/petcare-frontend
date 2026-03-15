@@ -9,7 +9,7 @@ import TipCard from "../../componentes/TipCard/TipCard"
 export default function AdminTipsPage() {
   const [tips, setTips] = useState<Tip[]>([])
   const [loading, setLoading] = useState(true)
-  const [showToast, setShowToast] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null)
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -40,12 +40,11 @@ export default function AdminTipsPage() {
     e.preventDefault()
     try {
       await createTip(formData)
-      setShowToast(true)
+      setToast({ message: "Tip creado correctamente", type: "success" })
       setFormData({ title: "", content: "", species: "", category: "" })
       fetchTips()
-      setTimeout(() => setShowToast(false), 3000)
     } catch (error) {
-      console.error("Error creando tip", error)
+      setToast({ message: "Error al crear el tip", type: "error" })
     }
   }
 
@@ -146,11 +145,9 @@ export default function AdminTipsPage() {
         </div>
       )}
 
-      {showToast && (
+      {toast && (
         <Toast
-          message="Tip creado correctamente"
-          type="success"
-          onClose={() => setShowToast(false)}
+          message={toast.message} type={toast.type} onClose={() => setToast(null)}
         />
       )}
     </div>

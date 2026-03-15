@@ -14,7 +14,7 @@ export default function AdminUsersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
 
-  const [showToast, setShowToast] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null)
   const [deleting, setDeleting] = useState(false)
 
   const fetchUsers = async () => {
@@ -41,9 +41,9 @@ export default function AdminUsersPage() {
       setDeleting(true)
       await deleteUser(selectedUser.id)
       setUsers(users.filter(u => u.id !== selectedUser.id))
-      setShowToast(true)
+      setToast({ message: "Usuario eliminado correctamente", type: "success" })
     } catch (error) {
-      console.error("Error al eliminar usuario", error)
+      setToast({ message: "Error al eliminar usuario", type: "error" })
     } finally {
       setDeleting(false)
       setIsModalOpen(false)
@@ -98,11 +98,9 @@ export default function AdminUsersPage() {
         loading={deleting}
       />
 
-      {showToast && (
+      {toast && (
         <Toast
-          message="Usuario eliminado correctamente"
-          type="success"
-          onClose={() => setShowToast(false)}
+          message={toast.message} type={toast.type} onClose={() => setToast(null)}
         />
       )}
 
