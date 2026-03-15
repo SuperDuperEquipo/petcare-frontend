@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { RequireAuth, RequireAdmin, RequireOwner } from "./components/Guards";
+import { RequireAuth, RequireAdmin } from "./components/Guards";
 import MainLayout from "./layout/Mainlayout";
 
 // Auth
@@ -21,6 +21,10 @@ import AppointmentDetailPage from "./pages/appointments/AppointmentDetailPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import ProfileFormPage from "./pages/profile/ProfileFormPage";
 
+// Vacunas
+import VaccineDetailPage from "./pages/Vaccine/VaccineDetailPage";
+import VaccineFormPage from "./pages/Vaccine/VaccineFormPage";
+
 // Dashboards / Placeholders
 const Dashboard = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
 const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
@@ -33,7 +37,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* -- Rutas protegidas (Requieren sesión) -------- */}
+        {/* -- Rutas protegidas  ---------------- */}
         <Route element={<RequireAuth />}>
           <Route element={<MainLayout />}>
             {/* Redirección raíz */}
@@ -46,6 +50,20 @@ function App() {
             <Route path="/mascotas/:id" element={<PetDetailPage />} />
             <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
 
+            {/* Módulo de Vacunas  */}
+            <Route
+              path="/mascotas/:id/vacunas/nueva"
+              element={<VaccineFormPage />}
+            />
+            <Route
+              path="/mascotas/:id/vacunas/:vaccineId"
+              element={<VaccineDetailPage />}
+            />
+            <Route
+              path="/mascotas/:id/vacunas/:vaccineId/editar"
+              element={<VaccineFormPage />}
+            />
+
             {/* Módulo Citas */}
             <Route path="/citas" element={<AppointmentsPage />} />
             <Route path="/citas/nueva" element={<AppointmentFormPage />} />
@@ -57,14 +75,14 @@ function App() {
             <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
             <Route path="/perfil/editar" element={<ProfileFormPage />} />
 
-            {/* Rutas de admin */}
+            {/* Rutas de Admin */}
             <Route element={<RequireAdmin />}>
               <Route path="/admin/*" element={<AdminPanel />} />
             </Route>
           </Route>
         </Route>
 
-        {/* Fallback */}
+        {/* Fallback para rutas inexistentes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthProvider>
