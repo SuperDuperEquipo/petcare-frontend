@@ -29,6 +29,14 @@ import VaccineFormPage from "./pages/Vaccine/VaccineFormPage";
 const Dashboard = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
 const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
 
+//admin
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminTipsPage from './pages/admin/AdminTipsPage'
+import AdminPage from './pages/admin/AdminPage'
+
+//Tips
+import TipsPage from './pages/tips/TipsPages'
+
 function App() {
   return (
     <AuthProvider>
@@ -84,6 +92,11 @@ function App() {
 
         {/* Fallback para rutas inexistentes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/tips" element={<TipsPage />} />
+            <Route path="/admin/tips" element={<AdminTipsPage />} />
+            <Route path="/admin" element={<AdminPage/>} />
+
       </Routes>
     </AuthProvider>
   );
