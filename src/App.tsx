@@ -16,8 +16,35 @@ const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
 const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
 const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueno</h1>;
 
+//Vaccine
+import VaccineDetailPage from './pages/Vaccine/VaccineDetailPage'
+import VaccineFormPage from './pages/Vaccine/VaccineFormPage'
+
 function App() {
   return (
+    <AuthProvider>
+      <BrowserRouter>
+        <MainLayout>
+          <Routes>
+            {/* Redirección raíz */}
+            <Route path="/" element={<Navigate to="/mascotas" replace />} />
+
+            {/* Módulo Mascotas */}
+            <Route path="/mascotas" element={<PetsPage />} />
+            <Route path="/mascotas/nueva" element={<PetFormPage />} />
+            <Route path="/mascotas/:id" element={<PetDetailPage />} />
+            <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
+
+            {/*Módulo de vacunas*/}
+            <Route path="/mascotas/:id/vacunas/nueva" element={<VaccineFormPage />} />
+            <Route path="/mascotas/:id/vacunas/:vaccineId" element={<VaccineDetailPage />} />
+            <Route path="/mascotas/:id/vacunas/:vaccineId/editar" element={<VaccineFormPage />} />
+
+          </Routes>
+        </MainLayout>
+      </BrowserRouter>
+    </AuthProvider>
+  )
     <Routes>
       {/* -- Rutas públicas (sin layout) --------------- */}
       <Route path="/login"    element={<Login />} />
