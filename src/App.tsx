@@ -13,17 +13,17 @@ import PetFormPage   from './pages/pets/PetFormPage';
 
 // TODO: reemplazar estos placeholders con páginas reales
 const Dashboard  = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
-const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin<h1>;
-const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueño</h1>;
+const AdminPanel = () => <h1 style={{ padding: 32 }}>Panel Admin</h1>;
+const OwnerPanel = () => <h1 style={{ padding: 32 }}>Mi Perfil de Dueno</h1>;
 
 function App() {
   return (
     <Routes>
-      {/* ── Rutas públicas (sin layout) ─────────────── */}
+      {/* -- Rutas públicas (sin layout) --------------- */}
       <Route path="/login"    element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* ── Rutas protegidas: requieren sesión ──────── */}
+      {/* -- Rutas protegidas: requieren sesión -------- */}
       <Route element={<RequireAuth />}>
         <Route element={<MainLayout />}>
 
