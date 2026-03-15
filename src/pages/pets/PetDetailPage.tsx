@@ -100,7 +100,7 @@ export default function PetDetailPage() {
           {/* Hero */}
           <div className="relative h-72 bg-gradient-to-br from-petPinkLight to-petIndigoLight flex items-center justify-center overflow-hidden">
             {pet.foto_url
-              ? <img src={pet.foto_url} alt={pet.nombre} className="w-full h-full object-cover" />
+              ? <img src={pet.foto_url} alt={pet.nombre} className="w-full h-full object-top" />
               : <PawPrint size={80} color="#D0D1F0" strokeWidth={1.2} />
             }
             <div className="absolute top-4 right-4 flex gap-2">
