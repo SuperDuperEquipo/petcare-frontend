@@ -2,8 +2,11 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    role: 'admin' | 'user' | 'owner';
+    role: 'user' | 'owner' | 'admin';
+    is_active: boolean;
+    created_at: string;
 }
+ 
 
 export interface Pet {
     id: number;
