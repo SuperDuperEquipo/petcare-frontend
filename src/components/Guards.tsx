@@ -18,7 +18,7 @@ export const RequireAdmin = () => {
 export const RequireOwner = () => {
   const { user, isAuthenticated } = useAuth();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  return user?.role === 'owner' || user?.role === 'admin'
+  return user?.role === 'owner' || user?.role === 'user'
     ? <Outlet />
-    : <Navigate to="/dashboard" replace />;
+    : <Navigate to="/admin" replace />;
 };

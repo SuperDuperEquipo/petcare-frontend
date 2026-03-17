@@ -1,10 +1,10 @@
 import { User, LayoutDashboard, PawPrint } from "lucide-react"
+import { useAuth } from "../../context/AuthContext"
 
-type AdminHomePageProps = {
-  userName?: string
-}
 
-export default function AdminPage({ userName = "Admin" }: AdminHomePageProps) {
+
+export default function AdminPage() {
+  const {user} = useAuth()
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
 
@@ -12,12 +12,12 @@ export default function AdminPage({ userName = "Admin" }: AdminHomePageProps) {
       <div className="bg-white rounded-2xl shadow-md border border-petIndigoLight p-8 flex flex-col items-center text-center gap-4">
         <PawPrint size={64} className="text-petIndigo" />
         <h1 className="font-display text-3xl font-semibold text-petDark">
-          ¡Bienvenido{userName ? `, ${userName}` : ""}!
+          ¡Hola{user?.name ? `, ${user.name}` : ""}!
         </h1>
-        <p className="text-petMuted text-sm md:text-base">
+        <p className="text-petIndigo text-sm md:text-base max-w-lg">
           Este es tu panel administrativo. Desde aquí puedes gestionar usuarios, tips y toda la información de la plataforma de PetCare.
         </p>
-        <p className="text-petIndigo text-sm md:text-base font-medium">
+        <p className="text-petMuted text-sm md:text-base font-medium">
           Usa el menú superior para navegar por las secciones disponibles.
         </p>
       </div>

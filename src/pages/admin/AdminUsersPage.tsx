@@ -63,29 +63,50 @@ export default function AdminUsersPage() {
           <p className="text-petMuted text-sm">No hay usuarios registrados</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {users.map(user => (
-            <div
-              key={user.id}
-              className="bg-white rounded-2xl shadow-sm border border-petIndigoLight p-5 hover:-translate-y-1 hover:shadow-md transition-all"
-            >
-              <h2 className="font-display text-lg font-semibold text-petDark mb-2">
-                {user.name}
-              </h2>
-              <p className="text-sm text-petMuted mb-2">{user.email}</p>
-              <p className="text-xs text-petIndigo font-medium mb-4">{user.role}</p>
-
-              <button
-                onClick={() => {
-                  setSelectedUser(user)
-                  setIsModalOpen(true)
-                }}
-                className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-semibold bg-petPink text-white hover:bg-petPinkDark transition-all"
-              >
-                <Trash size={16} /> Eliminar
-              </button>
-            </div>
-          ))}
+        <div className="bg-white rounded-2xl border border-petIndigoLight shadow-sm overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-petIndigoLight text-petIndigo text-xs font-semibold uppercase tracking-wide">
+                <th className="text-left px-5 py-4">Nombre</th>
+                <th className="text-left px-5 py-4">Email</th>
+                <th className="text-left px-5 py-4">Rol</th>
+                <th className="text-left px-5 py-4">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr
+                  key={user.id}
+                  className={`border-t border-petBorder hover:bg-petCard transition-colors ${
+                    index % 2 === 0 ? "bg-white" : "bg-petIndigoLight/30"
+                  }`}
+                >
+                  <td className="px-5 py-4 font-display font-semibold text-petDark">
+                    {user.name}
+                  </td>
+                  <td className="px-5 py-4 text-petMuted">
+                    {user.email}
+                  </td>
+                  <td className="px-5 py-4">
+                    <span className="inline-block bg-petIndigoLight text-petIndigo text-xs font-medium px-3 py-1 rounded-full capitalize">
+                      {user.role}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4">
+                    <button
+                      onClick={() => {
+                        setSelectedUser(user)
+                        setIsModalOpen(true)
+                      }}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-petPink text-white hover:bg-petPinkDark transition-all"
+                    >
+                      <Trash size={16} /> Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 

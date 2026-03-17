@@ -2,7 +2,7 @@ import { Mail, ShieldCheck, FileText } from "lucide-react"
 
 function Footer() {
   return (
-    <footer className="bg-petIndigo text-white py-6 mt-auto shadow-inner">
+    <footer className="bg-gradient-to-br from-petIndigo to-petIndigoDark text-white py-6 mt-auto shadow-inner">
 
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
 

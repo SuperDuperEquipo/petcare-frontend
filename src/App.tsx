@@ -26,7 +26,7 @@ import VaccineDetailPage from "./pages/Vaccine/VaccineDetailPage";
 import VaccineFormPage from "./pages/Vaccine/VaccineFormPage";
 
 // Dashboards / Placeholders
-const Dashboard = () => <h1 style={{ padding: 32 }}>Dashboard</h1>;
+import Dashboard from "./pages/Dashboard";
 
 //admin
 import AdminUsersPage from './pages/admin/AdminUsersPage'
@@ -48,7 +48,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route element={<MainLayout />}>
             {/* Redirección raíz */}
-            <Route path="/" element={<Navigate to="/mascotas" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
 
             {/* Módulo Mascotas */}
@@ -86,7 +86,7 @@ function App() {
 
             {/* Rutas de Admin */}
             <Route element={<RequireAdmin />}>
-              <Route path="/admin " element={<AdminPage />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/tips" element={<AdminTipsPage />} />
               <Route path="/admin/users" element={<AdminUsersPage/>} />
             </Route>
