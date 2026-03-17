@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { RequireAuth, RequireAdmin } from "./components/Guards";
+import { RequireAuth, RequireAdmin, RequireOwner } from "./components/Guards";
 import MainLayout from "./layout/Mainlayout";
 
 // Auth
@@ -52,24 +52,26 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
 
             {/* Módulo Mascotas */}
-            <Route path="/mascotas" element={<PetsPage />} />
-            <Route path="/mascotas/nueva" element={<PetFormPage />} />
-            <Route path="/mascotas/:id" element={<PetDetailPage />} />
-            <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
+            <Route element={<RequireOwner />}>
+              <Route path="/mascotas" element={<PetsPage />} />
+              <Route path="/mascotas/nueva" element={<PetFormPage />} />
+              <Route path="/mascotas/:id" element={<PetDetailPage />} />
+              <Route path="/mascotas/:id/editar" element={<PetFormPage />} />
 
-            {/* Módulo de Vacunas  */}
-            <Route
-              path="/mascotas/:id/vacunas/nueva"
-              element={<VaccineFormPage />}
-            />
-            <Route
-              path="/mascotas/:id/vacunas/:vaccineId"
-              element={<VaccineDetailPage />}
-            />
-            <Route
-              path="/mascotas/:id/vacunas/:vaccineId/editar"
-              element={<VaccineFormPage />}
-            />
+              {/* Módulo de Vacunas  */}
+              <Route
+                path="/mascotas/:id/vacunas/nueva"
+                element={<VaccineFormPage />}
+              />
+              <Route
+                path="/mascotas/:id/vacunas/:vaccineId"
+                element={<VaccineDetailPage />}
+              />
+              <Route
+                path="/mascotas/:id/vacunas/:vaccineId/editar"
+                element={<VaccineFormPage />}
+              />
+            </Route>
 
             {/* Módulo Citas */}
             <Route path="/citas" element={<AppointmentsPage />} />
