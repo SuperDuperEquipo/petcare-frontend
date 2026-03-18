@@ -19,21 +19,16 @@ import {
 } from "../../api/appointmentService";
 import { getPets } from "../../api/petService";
 import type { Pet } from "../../types";
-import { useAuth } from "../../context/AuthContext";
 
 import Spinner from "../../componentes/Spinner/Spinner";
 import Toast from "../../componentes/Toast/Toast";
-import { getUsers } from "../../services/adminService";
 
 export default function AppointmentFormPage() {
   const { id } = useParams<{ id?: string }>();
   const isEditing = Boolean(id);
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
 
   const [pets, setPets] = useState<Pet[]>([]);
-  const [owners, setOwners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{
@@ -74,7 +69,7 @@ export default function AppointmentFormPage() {
       }
     }
     loadInitialData();
-  }, [id, isEditing, reset, isAdmin]);
+  }, [id, isEditing, reset]);
 
   async function onSubmit(data: any) {
     setSaving(true);
@@ -132,9 +127,7 @@ export default function AppointmentFormPage() {
         <p className="text-sm text-petMuted ml-10">
           {isEditing
             ? "Modifica los detalles de la consulta."
-            : isAdmin
-              ? "Registra una cita para un paciente de la clínica."
-              : "Reserva un espacio para tu mascota."}
+            : "Reserva un espacio para tu mascota."}
         </p>
       </div>
 
@@ -143,39 +136,6 @@ export default function AppointmentFormPage() {
       ) : (
         <div className="bg-white rounded-2xl p-9 border border-petIndigoLight shadow-sm">
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* -- SECCIÓN EXCLUSIVA ADMIN -- */}
-            {isAdmin && owners.length > 0 && (
-              <>
-                <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
-                  Información del Cliente
-                </p>
-                <div className="mb-5">
-                  <label className={labelBase}>
-                    <User size={13} /> Propietario{" "}
-                    <span className="text-petPink">*</span>
-                  </label>
-                  <select
-                    className={`${inputBase} ${errors.propietario_id ? inputError : ""}`}
-                    {...register("propietario_id", {
-                      required: isAdmin
-                        ? "El propietario es obligatorio"
-                        : false,
-                    })}
-                  >
-                    <option value="">
-                      Selecciona al dueño de la mascota...
-                    </option>
-                    {owners.map((owner) => (
-                      <option key={owner.id} value={owner.id}>
-                        {owner.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <hr className="border-petIndigoLight my-7" />
-              </>
-            )}
-
             {/* -- SECCIÓN: DATOS DE LA CITA -- */}
             <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
               Información de la consulta

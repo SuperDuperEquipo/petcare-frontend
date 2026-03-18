@@ -7,7 +7,6 @@ import {
   Eye,
   Trash2,
   ClipboardList,
-  User,
   Pencil,
 } from "lucide-react";
 import {
@@ -15,15 +14,11 @@ import {
   deleteAppointment,
   type Appointment,
 } from "../../api/appointmentService";
-import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../componentes/Spinner/Spinner";
 import Toast from "../../componentes/Toast/Toast";
 import ConfirmModal from "../../componentes/ConfirmModal/ConfirmModal";
 
 export default function AppointmentsPage() {
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
-
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -66,12 +61,13 @@ export default function AppointmentsPage() {
       <div className="flex justify-between items-end mb-12">
         <div>
           <h1 className="font-display text-4xl font-semibold text-petDark tracking-tight mb-1">
-            {isAdmin ? "Control de Citas" : "Mis Citas"}
+            "Mis Citas"
           </h1>
           <p className="text-sm text-petMuted">
-            {isAdmin
-              ? `Gestionando ${appointments.length} citas en la clínica`
-              : `Tienes ${appointments.length} ${appointments.length === 1 ? "cita programada" : "citas programadas"}`}
+            Tienes {appointments.length}
+            {appointments.length === 1
+              ? " cita programada"
+              : " citas programadas"}
           </p>
         </div>
 
@@ -96,9 +92,7 @@ export default function AppointmentsPage() {
             No hay citas agendadas
           </h2>
           <p className="text-sm text-petMuted">
-            {isAdmin
-              ? "El calendario de la clínica está vacío."
-              : "Agrega una nueva cita para comenzar."}
+            "Agrega una nueva cita para comenzar."
           </p>
         </div>
       ) : (
@@ -123,10 +117,7 @@ export default function AppointmentsPage() {
                 </h2>
 
                 <p className="text-xs text-petMuted mb-4 flex items-center gap-1">
-                  {isAdmin ? <User size={12} /> : null}
-                  {isAdmin && app.propietario_nombre
-                    ? `Dueño: ${app.propietario_nombre}`
-                    : `Mascota ID: #${app.id_mascota}`}
+                  Mascota ID: #{app.id_mascota}
                 </p>
 
                 <div className="space-y-2 mb-6 bg-petCard p-3 rounded-lg border border-petBorder">
@@ -154,7 +145,7 @@ export default function AppointmentsPage() {
                     <Pencil size={14} /> Editar
                   </Link>
                   <button
-                    onClick={() => setDeleteId(app)}
+                    onClick={() => setDeleteId(app.id)}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border border-petPinkLighter text-petPinkMid hover:bg-petPinkLight transition-colors"
                   >
                     <Trash2 size={14} /> Eliminar
