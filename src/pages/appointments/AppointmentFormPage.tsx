@@ -10,7 +10,6 @@ import {
   Tag,
   PawPrint,
   FileText,
-  User,
 } from "lucide-react";
 import {
   getAppointment,
@@ -118,7 +117,6 @@ export default function AppointmentFormPage() {
 
       <div className="mb-9">
         <div className="flex items-center gap-3 mb-1.5">
-          {/* El ícono de citas con color sutil igual al form de mascotas */}
           <ClipboardList size={28} color="#D0D1F0" strokeWidth={1.5} />
           <h1 className="font-display text-3xl font-semibold text-petDark tracking-tight">
             {isEditing ? "Editar cita" : "Nueva cita"}

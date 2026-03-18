@@ -9,7 +9,6 @@ import {
   ClipboardList,
   Tag,
   PawPrint,
-  User,
 } from "lucide-react";
 import {
   getAppointment,
