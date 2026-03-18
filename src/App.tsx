@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { RequireAuth, RequireAdmin, RequireOwner } from "./components/Guards";
 import MainLayout from "./layout/Mainlayout";
+import { useAuth } from "./context/AuthContext";
 
 // Auth
 import Login from "./pages/Login";
@@ -36,6 +37,11 @@ import AdminPage from "./pages/admin/AdminPage";
 //Tips
 import TipsPage from "./pages/tips/TipsPages";
 
+const RootRedirect = () => {
+  const { user } = useAuth();
+  return <Navigate to={user?.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -48,8 +54,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route element={<MainLayout />}>
             {/* Redirección raíz */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<RootRedirect/>} />
 
             {/* Módulo Mascotas */}
             <Route element={<RequireOwner />}>
@@ -85,9 +90,11 @@ function App() {
               <Route path="/perfil" element={<ProfilePage />} />
               <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
               <Route path="/perfil/editar" element={<ProfileFormPage />} />
-            </Route>
+            
+              <Route path="/dashboard" element={<Dashboard />} />
 
-            <Route path="/tips" element={<TipsPage />} />
+              <Route path="/tips" element={<TipsPage />} />
+            </Route>
 
             {/* Rutas de Admin */}
             <Route element={<RequireAdmin />}>
