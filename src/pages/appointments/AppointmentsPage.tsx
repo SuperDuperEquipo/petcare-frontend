@@ -7,17 +7,23 @@ import {
   Eye,
   Trash2,
   ClipboardList,
+  User,
+  Pencil,
 } from "lucide-react";
 import {
   getAppointments,
   deleteAppointment,
   type Appointment,
 } from "../../api/appointmentService";
+import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../componentes/Spinner/Spinner";
 import Toast from "../../componentes/Toast/Toast";
 import ConfirmModal from "../../componentes/ConfirmModal/ConfirmModal";
 
 export default function AppointmentsPage() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -56,42 +62,43 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-6 py-12 font-sans">
       <div className="flex justify-between items-end mb-12">
         <div>
           <h1 className="font-display text-4xl font-semibold text-petDark tracking-tight mb-1">
-            Mis citas
+            {isAdmin ? "Control de Citas" : "Mis Citas"}
           </h1>
           <p className="text-sm text-petMuted">
-            {appointments.length}{" "}
-            {appointments.length === 1
-              ? "cita programada"
-              : "citas programadas"}
+            {isAdmin
+              ? `Gestionando ${appointments.length} citas en la clínica`
+              : `Tienes ${appointments.length} ${appointments.length === 1 ? "cita programada" : "citas programadas"}`}
           </p>
         </div>
+
         <Link
           to="/citas/nueva"
-          className="inline-flex items-center gap-2 bg-gradient-to-br from-petIndigo to-petIndigoDark text-white px-6 py-3 rounded-xl text-sm font-medium shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all"
+          className="inline-flex items-center gap-2 bg-gradient-to-br from-petIndigo to-petIndigoDark text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
         >
-          <Plus size={16} strokeWidth={2.5} /> Nueva cita
+          <Plus size={18} strokeWidth={2.5} /> Nueva cita
         </Link>
       </div>
 
       {loading ? (
         <Spinner />
       ) : appointments.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24">
+        <div className="flex flex-col items-center justify-center py-24 ">
           <Calendar
             size={64}
-            color="#E2E2F6"
+            className="text-petIndigoSubtle mb-5"
             strokeWidth={1.5}
-            className="mb-5"
           />
           <h2 className="font-display text-2xl font-semibold text-petDark mb-2">
             No hay citas agendadas
           </h2>
           <p className="text-sm text-petMuted">
-            Agrega una nueva cita para comenzar
+            {isAdmin
+              ? "El calendario de la clínica está vacío."
+              : "Agrega una nueva cita para comenzar."}
           </p>
         </div>
       ) : (
@@ -99,44 +106,58 @@ export default function AppointmentsPage() {
           {appointments.map((app) => (
             <div
               key={app.id}
-              className="bg-white rounded-2xl overflow-hidden border border-petIndigoLight shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200"
+              className="bg-white rounded-2xl overflow-hidden border border-petBorder shadow-sm hover:-translate-y-1 hover:border-petIndigoSubtle transition-all duration-200"
             >
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <div className="bg-petIndigoLight p-3 rounded-xl">
+                  <div className="bg-white p-3 rounded-xl">
                     <ClipboardList className="text-petIndigo" size={24} />
                   </div>
-                  <span className="bg-petPinkLight text-petPink text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                  <span className="bg-petPinkLight text-petPinkDark text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                     {app.tipo}
                   </span>
                 </div>
+
                 <h2 className="font-display text-lg font-semibold text-petDark mb-1">
                   {app.titulo}
                 </h2>
-                <p className="text-xs text-petMuted mb-4">
-                  Mascota ID: #{app.id_mascota}
+
+                <p className="text-xs text-petMuted mb-4 flex items-center gap-1">
+                  {isAdmin ? <User size={12} /> : null}
+                  {isAdmin && app.propietario_nombre
+                    ? `Dueño: ${app.propietario_nombre}`
+                    : `Mascota ID: #${app.id_mascota}`}
                 </p>
-                <div className="space-y-2 mb-6">
-                  <div className="flex items-center gap-2 text-sm text-petDark">
+
+                <div className="space-y-2 mb-6 bg-petCard p-3 rounded-lg border border-petBorder">
+                  <div className="flex items-center gap-2 text-sm text-petDark font-medium">
                     <Calendar size={14} className="text-petIndigo" />{" "}
                     {app.fecha}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-petDark">
-                    <Clock size={14} className="text-petIndigo" /> {app.hora}
+                  <div className="flex items-center gap-2 text-sm text-petDark font-medium">
+                    <Clock size={14} className="text-petPink" /> {app.hora}
                   </div>
                 </div>
+
+                {/* Actions */}
                 <div className="flex gap-2 pt-3 border-t border-petIndigoLight">
                   <Link
                     to={`/citas/${app.id}`}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium bg-petIndigoLight text-petIndigo hover:bg-petIndigoLighter transition-colors"
                   >
-                    <Eye size={13} /> Ver
+                    <Eye size={14} /> Ver
+                  </Link>
+                  <Link
+                    to={`/citas/${app.id}/editar`}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium bg-petPinkLight text-petPink hover:bg-petPinkLighter transition-colors"
+                  >
+                    <Pencil size={14} /> Editar
                   </Link>
                   <button
-                    onClick={() => setDeleteId(app.id)}
+                    onClick={() => setDeleteId(app)}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border border-petPinkLighter text-petPinkMid hover:bg-petPinkLight transition-colors"
                   >
-                    <Trash2 size={13} /> Eliminar
+                    <Trash2 size={14} /> Eliminar
                   </button>
                 </div>
               </div>

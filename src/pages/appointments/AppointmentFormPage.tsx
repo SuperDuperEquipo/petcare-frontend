@@ -10,6 +10,7 @@ import {
   Tag,
   PawPrint,
   FileText,
+  User,
 } from "lucide-react";
 import {
   getAppointment,
@@ -18,16 +19,21 @@ import {
 } from "../../api/appointmentService";
 import { getPets } from "../../api/petService";
 import type { Pet } from "../../types";
+import { useAuth } from "../../context/AuthContext";
 
 import Spinner from "../../componentes/Spinner/Spinner";
 import Toast from "../../componentes/Toast/Toast";
+import { getUsers } from "../../services/adminService";
 
 export default function AppointmentFormPage() {
   const { id } = useParams<{ id?: string }>();
   const isEditing = Boolean(id);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   const [pets, setPets] = useState<Pet[]>([]);
+  const [owners, setOwners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{
@@ -39,12 +45,14 @@ export default function AppointmentFormPage() {
     register,
     handleSubmit,
     reset,
+    formState: { errors },
   } = useForm<any>();
 
   useEffect(() => {
     async function loadInitialData() {
       try {
         setLoading(true);
+
         const petsData = await getPets();
         setPets(petsData);
 
@@ -65,9 +73,8 @@ export default function AppointmentFormPage() {
         setLoading(false);
       }
     }
-
     loadInitialData();
-  }, [id, isEditing, reset]);
+  }, [id, isEditing, reset, isAdmin]);
 
   async function onSubmit(data: any) {
     setSaving(true);
@@ -78,6 +85,7 @@ export default function AppointmentFormPage() {
       type: data.tipo,
       description: data.descripcion,
       pet_id: Number(data.id_mascota),
+      ...(data.propietario_id && { owner_id: Number(data.propietario_id) }),
     };
 
     try {
@@ -97,127 +105,201 @@ export default function AppointmentFormPage() {
   }
 
   const inputBase =
-    "w-full px-4 py-3 border border-petIndigoLighter rounded-xl text-sm text-petDark bg-petCard outline-none transition focus:border-petIndigo focus:ring-2 focus:ring-petIndigo/10 focus:bg-white appearance-none";
+    "w-full px-4 py-3 border border-petIndigoLighter rounded-xl text-sm text-petDark bg-petCard outline-none transition focus:border-petIndigo focus:ring-2 focus:ring-petIndigo/10 focus:bg-white";
+  const inputError =
+    "border-petPink focus:border-petPink focus:ring-petPink/10";
   const labelBase =
     "flex items-center gap-1.5 text-xs font-semibold text-petIndigo uppercase tracking-wider mb-2";
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
+    <div className="max-w-xl mx-auto px-6 py-12 font-sans bg-white min-h-screen">
       <Link
-        to="/citas"
+        to={isEditing ? `/citas/${id}` : "/citas"}
         className="inline-flex items-center gap-2 text-sm text-petMuted hover:text-petIndigo transition-colors mb-9"
       >
         <ArrowLeft size={16} />{" "}
-        {isEditing ? "Volver al detalle" : "Volver al historial"}
+        {isEditing ? "Volver al detalle" : "Volver al calendario"}
       </Link>
 
-      <div className="mb-9 flex items-center gap-3">
-        <ClipboardList size={32} className="text-petIndigo" strokeWidth={1.5} />
-        <div>
+      <div className="mb-9">
+        <div className="flex items-center gap-3 mb-1.5">
+          {/* El ícono de citas con color sutil igual al form de mascotas */}
+          <ClipboardList size={28} color="#D0D1F0" strokeWidth={1.5} />
           <h1 className="font-display text-3xl font-semibold text-petDark tracking-tight">
-            {isEditing ? "Editar cita" : "Agendar nueva cita"}
+            {isEditing ? "Editar cita" : "Nueva cita"}
           </h1>
-          <p className="text-sm text-petMuted">
-            Organiza las visitas médicas de tus mejores amigos
-          </p>
         </div>
+        <p className="text-sm text-petMuted ml-10">
+          {isEditing
+            ? "Modifica los detalles de la consulta."
+            : isAdmin
+              ? "Registra una cita para un paciente de la clínica."
+              : "Reserva un espacio para tu mascota."}
+        </p>
       </div>
 
       {loading ? (
         <Spinner />
       ) : (
-        <div className="bg-white rounded-[2.5rem] p-10 border border-petIndigoLight shadow-sm">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-2xl p-9 border border-petIndigoLight shadow-sm">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            {/* -- SECCIÓN EXCLUSIVA ADMIN -- */}
+            {isAdmin && owners.length > 0 && (
+              <>
+                <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
+                  Información del Cliente
+                </p>
+                <div className="mb-5">
+                  <label className={labelBase}>
+                    <User size={13} /> Propietario{" "}
+                    <span className="text-petPink">*</span>
+                  </label>
+                  <select
+                    className={`${inputBase} ${errors.propietario_id ? inputError : ""}`}
+                    {...register("propietario_id", {
+                      required: isAdmin
+                        ? "El propietario es obligatorio"
+                        : false,
+                    })}
+                  >
+                    <option value="">
+                      Selecciona al dueño de la mascota...
+                    </option>
+                    {owners.map((owner) => (
+                      <option key={owner.id} value={owner.id}>
+                        {owner.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <hr className="border-petIndigoLight my-7" />
+              </>
+            )}
+
+            {/* -- SECCIÓN: DATOS DE LA CITA -- */}
+            <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
+              Información de la consulta
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 mb-5">
               <div>
                 <label className={labelBase}>
-                  <Tag size={14} /> Título de la cita
+                  <Tag size={13} /> Título{" "}
+                  <span className="text-petPink">*</span>
                 </label>
                 <input
-                  className={inputBase}
-                  {...register("titulo", { required: true })}
-                  placeholder="Ej. Control de Vacunas"
+                  className={`${inputBase} ${errors.titulo ? inputError : ""}`}
+                  placeholder="Ej. Control anual"
+                  {...register("titulo", {
+                    required: "El título es obligatorio",
+                  })}
                 />
               </div>
               <div>
                 <label className={labelBase}>
-                  <ClipboardList size={14} /> Tipo de servicio
+                  <ClipboardList size={13} /> Servicio{" "}
+                  <span className="text-petPink">*</span>
                 </label>
                 <select
-                  className={inputBase}
-                  {...register("tipo", { required: true })}
+                  className={`${inputBase} ${errors.tipo ? inputError : ""}`}
+                  {...register("tipo", {
+                    required: "Selecciona el tipo de servicio",
+                  })}
                 >
                   <option value="">Seleccionar...</option>
-                  <option value="Medica">Consulta Médica</option>
+                  <option value="Consulta">Consulta Médica</option>
+                  <option value="Vacunacion">Vacunación</option>
                   <option value="Estetica">Estética / Baño</option>
-                  <option value="Urgencia">Urgencia</option>
+                  <option value="Emergencia">Emergencia</option>
                 </select>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="mb-5">
+              <label className={labelBase}>
+                <PawPrint size={13} /> Mascota Paciente{" "}
+                <span className="text-petPink">*</span>
+              </label>
+              <select
+                className={`${inputBase} ${errors.id_mascota ? inputError : ""}`}
+                {...register("id_mascota", {
+                  required: "Selecciona una mascota",
+                })}
+              >
+                <option value="">¿Quién viene a la cita?</option>
+                {pets.map((pet) => (
+                  <option key={pet.id} value={pet.id}>
+                    {pet.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <hr className="border-petIndigoLight my-7" />
+
+            {/* -- SECCIÓN: FECHA Y HORA -- */}
+            <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
+              Programación
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 mb-5">
               <div>
                 <label className={labelBase}>
-                  <PawPrint size={14} /> Mascota
-                </label>
-                <select
-                  className={inputBase}
-                  {...register("id_mascota", { required: true })}
-                >
-                  <option value="">¿Quién viene?</option>
-                  {pets.map((pet) => (
-                    <option key={pet.id} value={pet.id}>
-                      {pet.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className={labelBase}>
-                  <Calendar size={14} /> Fecha
+                  <Calendar size={13} /> Fecha{" "}
+                  <span className="text-petPink">*</span>
                 </label>
                 <input
                   type="date"
-                  className={inputBase}
-                  {...register("fecha", { required: true })}
+                  className={`${inputBase} ${errors.fecha ? inputError : ""}`}
+                  {...register("fecha", {
+                    required: "La fecha es obligatoria",
+                  })}
                 />
               </div>
               <div>
                 <label className={labelBase}>
-                  <Clock size={14} /> Hora
+                  <Clock size={13} /> Hora{" "}
+                  <span className="text-petPink">*</span>
                 </label>
                 <input
                   type="time"
-                  className={inputBase}
-                  {...register("hora", { required: true })}
+                  className={`${inputBase} ${errors.hora ? inputError : ""}`}
+                  {...register("hora", { required: "La hora es obligatoria" })}
                 />
               </div>
             </div>
 
-            <div>
+            <div className="mb-7">
               <label className={labelBase}>
-                <FileText size={14} /> Descripción detallada
+                <FileText size={13} /> Motivo / Detalles
               </label>
               <textarea
                 className={`${inputBase} resize-none`}
-                rows={4}
+                rows={3}
+                placeholder="Escribe aquí si hay síntomas específicos, dudas, etc."
                 {...register("descripcion")}
-                placeholder="Notas adicionales para el doctor..."
               />
             </div>
 
-            <div className="flex justify-end pt-4">
+            {/* -- BOTONES DE ACCIÓN -- */}
+            <div className="flex gap-3">
+              <Link
+                to={isEditing ? `/citas/${id}` : "/citas"}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-medium border border-petIndigoLighter text-petMuted hover:border-petIndigo hover:text-petIndigo transition-colors"
+              >
+                <ArrowLeft size={15} /> Cancelar
+              </Link>
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 rounded-2xl font-bold bg-gradient-to-br from-petIndigo to-petIndigoDark text-white shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold bg-gradient-to-br from-petIndigo to-petIndigoDark text-white shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
               >
-                <Save size={18} />
+                <Save size={16} />
                 {saving
                   ? "Guardando..."
                   : isEditing
-                    ? "Guardar Cambios"
-                    : "Confirmar Cita"}
+                    ? "Guardar cambios"
+                    : "Agendar cita"}
               </button>
             </div>
           </form>

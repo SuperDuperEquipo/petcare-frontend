@@ -12,6 +12,7 @@ export interface Appointment {
   id_mascota: number;
   mascota_nombre?: string;
   estado: AppointmentStatus;
+  propietario_nombre?: string;
 }
 
 export const getAppointments = async (): Promise<Appointment[]> => {

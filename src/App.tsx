@@ -29,12 +29,12 @@ import VaccineFormPage from "./pages/Vaccine/VaccineFormPage";
 import Dashboard from "./pages/Dashboard";
 
 //admin
-import AdminUsersPage from './pages/admin/AdminUsersPage'
-import AdminTipsPage from './pages/admin/AdminTipsPage'
-import AdminPage from './pages/admin/AdminPage'
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AdminTipsPage from "./pages/admin/AdminTipsPage";
+import AdminPage from "./pages/admin/AdminPage";
 
 //Tips
-import TipsPage from './pages/tips/TipsPages'
+import TipsPage from "./pages/tips/TipsPages";
 
 function App() {
   return (
@@ -71,18 +71,21 @@ function App() {
                 path="/mascotas/:id/vacunas/:vaccineId/editar"
                 element={<VaccineFormPage />}
               />
+
+              {/* Módulo Citas */}
+              <Route path="/citas" element={<AppointmentsPage />} />
+              <Route path="/citas/nueva" element={<AppointmentFormPage />} />
+              <Route path="/citas/:id" element={<AppointmentDetailPage />} />
+              <Route
+                path="/citas/:id/editar"
+                element={<AppointmentFormPage />}
+              />
+
+              {/* Módulo Perfil / Owner */}
+              <Route path="/perfil" element={<ProfilePage />} />
+              <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
+              <Route path="/perfil/editar" element={<ProfileFormPage />} />
             </Route>
-
-            {/* Módulo Citas */}
-            <Route path="/citas" element={<AppointmentsPage />} />
-            <Route path="/citas/nueva" element={<AppointmentFormPage />} />
-            <Route path="/citas/:id" element={<AppointmentDetailPage />} />
-            <Route path="/citas/:id/editar" element={<AppointmentFormPage />} />
-
-            {/* Módulo Perfil / Owner */}
-            <Route path="/perfil" element={<ProfilePage />} />
-            <Route path="/perfil/nuevo" element={<ProfileFormPage />} />
-            <Route path="/perfil/editar" element={<ProfileFormPage />} />
 
             <Route path="/tips" element={<TipsPage />} />
 
@@ -90,14 +93,14 @@ function App() {
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/tips" element={<AdminTipsPage />} />
-              <Route path="/admin/users" element={<AdminUsersPage/>} />
+              <Route path="/admin/users" element={<AdminUsersPage />} />
             </Route>
           </Route>
         </Route>
 
         {/* Fallback para rutas inexistentes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+      </Routes>
     </AuthProvider>
   );
 }
