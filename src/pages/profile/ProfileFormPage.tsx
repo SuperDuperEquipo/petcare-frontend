@@ -52,7 +52,6 @@ export default function ProfileFormPage() {
             direccion: myData.dirección || "",
           });
         } else {
-          // Si no tiene registro en la BD, precargamos su nombre del login
           reset({ nombre: user.name || "", telefono: "", direccion: "" });
         }
       } catch (error) {
@@ -71,7 +70,6 @@ export default function ProfileFormPage() {
       name: formData.nombre,
       phone: formData.telefono,
       address: formData.direccion,
-      // user_id lo maneja el backend por el token, o lo agregas si tu API lo requiere
     };
 
     try {
