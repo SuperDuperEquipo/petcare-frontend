@@ -2,7 +2,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    role: 'user' | 'owner' | 'admin';
+    role: 'user' | 'admin';
     owner_id?: number;
     is_active: boolean;
     created_at: string;

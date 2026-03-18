@@ -18,7 +18,7 @@ const Login = () => {
     try {
       const { data } = await axiosClient.post('/auth/login', { email, password });
       login(data.access_token, data.user);
-      // Redirige según rol: admin → /admin, owner/user → /dashboard
+      // Redirige según rol: admin → /admin, user → /dashboard
       navigate(getHomeByRole(data.user.role));
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');

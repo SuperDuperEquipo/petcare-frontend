@@ -16,7 +16,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const getHomeByRole = (role: User['role']): string => {
   switch (role) {
     case 'admin': return '/admin';
-    case 'owner': return '/dashboard';
     case 'user':  return '/dashboard';
     default:      return '/dashboard';
   }

@@ -24,7 +24,7 @@ function Navbar() {
       {/* Links */}
       <div className="flex items-center gap-4 md:gap-6">
 
-        {(user?.role === "user" || user?.role === "owner") && (
+        {user?.role === "user" && (
           <>
             <NavLink to="/dashboard" end className={linkClass}>Inicio</NavLink>
             <NavLink to="/mascotas" className={linkClass}>Mascotas</NavLink>
