@@ -16,7 +16,6 @@ import {
   deleteAppointment,
 } from "../../api/appointmentService";
 import type { Appointment } from "../../api/appointmentService";
-import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../componentes/Spinner/Spinner";
 import Toast from "../../componentes/Toast/Toast";
 import ConfirmModal from "../../componentes/ConfirmModal/ConfirmModal";
@@ -24,8 +23,6 @@ import ConfirmModal from "../../componentes/ConfirmModal/ConfirmModal";
 export default function AppointmentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
 
   const [app, setApp] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,13 +113,11 @@ export default function AppointmentDetailPage() {
               </div>
               <div className="bg-petCard border border-petBorder rounded-2xl p-5 hover:border-petIndigoSubtle transition-colors">
                 <div className="flex items-center gap-2 text-petIndigo text-xs font-bold uppercase mb-2">
-                  {isAdmin ? <User size={14} /> : <PawPrint size={14} />}
-                  {isAdmin ? "Dueño / Mascota" : "Mascota ID"}
+                  <PawPrint size={14} />
+                  "Mascota ID"
                 </div>
                 <p className="text-base font-bold text-petDark">
-                  {isAdmin && app.propietario_nombre
-                    ? `${app.propietario_nombre} (#${app.id_mascota})`
-                    : `#${app.id_mascota}`}
+                  #{app.id_mascota}
                 </p>
               </div>
             </div>
