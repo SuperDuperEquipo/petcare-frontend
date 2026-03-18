@@ -61,7 +61,7 @@ export default function AppointmentsPage() {
       <div className="flex justify-between items-end mb-12">
         <div>
           <h1 className="font-display text-4xl font-semibold text-petDark tracking-tight mb-1">
-            "Mis Citas"
+            Mis Citas
           </h1>
           <p className="text-sm text-petMuted">
             Tienes {appointments.length}
