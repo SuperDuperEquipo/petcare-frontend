@@ -1,12 +1,12 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { RequireAuth, RequireAdmin, RequireOwner } from "./components/Guards";
+import { RequireAuth, RequireAdmin, RequireUser } from "./componentes/Guards/Guards";
 import MainLayout from "./layout/Mainlayout";
 import { useAuth } from "./context/AuthContext";
 
 // Auth
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 
 // Mascotas
 import PetsPage from "./pages/pets/PetsPage";
@@ -57,7 +57,7 @@ function App() {
             <Route path="/" element={<RootRedirect/>} />
 
             {/* Módulo Mascotas */}
-            <Route element={<RequireOwner />}>
+            <Route element={<RequireUser />}>
               <Route path="/mascotas" element={<PetsPage />} />
               <Route path="/mascotas/nueva" element={<PetFormPage />} />
               <Route path="/mascotas/:id" element={<PetDetailPage />} />
