@@ -8,7 +8,7 @@ import Toast from '../../componentes/Toast/Toast'
 
 function formatDate(dateStr?: string | null) {
   if (!dateStr) return null
-  return new Date(dateStr).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 export default function VaccineDetailPage() {

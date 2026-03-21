@@ -11,7 +11,7 @@ import { getVaccinesByPet, deleteVaccine } from '../../api/vaccineService'
 
 function formatDate(dateStr?: string) {
   if (!dateStr) return null
-  return new Date(dateStr).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 function calcAge(dateStr?: string) {
