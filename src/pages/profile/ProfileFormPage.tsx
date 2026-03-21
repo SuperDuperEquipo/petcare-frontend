@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Save, ArrowLeft, User, Phone, MapPin, BadgeInfo } from "lucide-react";
+import { Save, ArrowLeft, User, BadgeInfo, Mail } from "lucide-react";
 import axiosClient from "../../api/axiosClient";
 import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../componentes/Spinner/Spinner";
@@ -13,7 +13,6 @@ export default function ProfileFormPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [ownerId, setOwnerId] = useState<number | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
@@ -27,33 +26,20 @@ export default function ProfileFormPage() {
   } = useForm({
     defaultValues: {
       nombre: "",
-      telefono: "",
-      direccion: "",
+      email: "",
     },
   });
 
   useEffect(() => {
     const fetchMyData = async () => {
-      if (!user?.id) return;
-
       try {
         setLoading(true);
-        const { data } = await axiosClient.get("/owners");
-        const lista = data.dueños || [];
-        const myData = lista.find(
-          (o: any) => String(o.user_id) === String(user.id),
-        );
+        const { data } = await axiosClient.get("/auth/profile");
 
-        if (myData) {
-          setOwnerId(myData.id);
-          reset({
-            nombre: myData.nombre || "",
-            telefono: myData.contacto || "",
-            direccion: myData.dirección || "",
-          });
-        } else {
-          reset({ nombre: user.name || "", telefono: "", direccion: "" });
-        }
+        reset({
+          nombre: data.user?.name || user?.name || "",
+          email: data.user?.email || user?.email || "",
+        });
       } catch (error) {
         setToast({ message: "Error al cargar datos", type: "error" });
       } finally {
@@ -68,16 +54,11 @@ export default function ProfileFormPage() {
     setSaving(true);
     const payload = {
       name: formData.nombre,
-      phone: formData.telefono,
-      address: formData.direccion,
+      email: formData.email,
     };
 
     try {
-      if (ownerId) {
-        await axiosClient.put(`/owners/${ownerId}`, payload);
-      } else {
-        await axiosClient.post("/owners", payload);
-      }
+      await axiosClient.put("/auth/profile", payload);
       setToast({
         message: "Perfil actualizado correctamente",
         type: "success",
@@ -90,7 +71,6 @@ export default function ProfileFormPage() {
     }
   };
 
-  // ESTILOS BASE (Idénticos a Mascotas y Citas)
   const inputBase =
     "w-full px-4 py-3 border border-petIndigoLighter rounded-xl text-sm text-petDark bg-petCard outline-none transition focus:border-petIndigo focus:ring-2 focus:ring-petIndigo/10 focus:bg-white";
   const inputError =
@@ -148,40 +128,20 @@ export default function ProfileFormPage() {
 
               <div className="md:col-span-2">
                 <label className={labelBase}>
-                  <Phone size={13} /> Teléfono de Contacto{" "}
+                  <Mail size={13} /> Correo electrónico{" "}
                   <span className="text-petPink">*</span>
                 </label>
                 <input
-                  className={`${inputBase} ${errors.telefono ? inputError : ""}`}
-                  placeholder="Ej. 7000-0000"
-                  {...register("telefono", {
-                    required: "El teléfono es obligatorio",
+                  className={`${inputBase} ${errors.email ? inputError : ""}`}
+                  placeholder="Ej. juan@example.com"
+                  {...register("email", {
+                    required: "El correo es obligatorio",
                   })}
                 />
               </div>
             </div>
 
             <hr className="border-petIndigoLight my-7" />
-
-            {/* -- SECCIÓN: UBICACIÓN -- */}
-            <p className="text-xs font-semibold text-petSubtle uppercase tracking-widest mb-5">
-              Ubicación
-            </p>
-
-            <div className="mb-7">
-              <label className={labelBase}>
-                <MapPin size={13} /> Dirección Residencial{" "}
-                <span className="text-petPink">*</span>
-              </label>
-              <textarea
-                className={`${inputBase} resize-none ${errors.direccion ? inputError : ""}`}
-                rows={3}
-                placeholder="Ej. Colonia San Benito, Pasaje 2, Casa #4..."
-                {...register("direccion", {
-                  required: "La dirección es obligatoria",
-                })}
-              />
-            </div>
 
             {/* -- BOTONES DE ACCIÓN -- */}
             <div className="flex gap-3">
