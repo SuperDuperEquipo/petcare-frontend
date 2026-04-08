@@ -13,7 +13,8 @@ export interface Vaccine {
 export interface VaccinePayload {
   name: string
   vet: string
-  next_dose: string | null
+  date_applied: string
+  next_dose?: string | null
 }
 
 export const getVaccinesByPet = async (petId: number): Promise<Vaccine[]> => {

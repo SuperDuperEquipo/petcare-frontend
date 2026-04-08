@@ -38,15 +38,6 @@ export interface Appointment {
     id_mascota: number;
 }
 
-export interface Owner {
-    id: number;
-    nombre: string;
-    contacto: string;
-    dirección: string;
-    user_id: number;
-    pets: Pick<Pet, 'id' | 'nombre'>[];
-}
-
 export interface Tip {
     id: number;
     titulo: string;
