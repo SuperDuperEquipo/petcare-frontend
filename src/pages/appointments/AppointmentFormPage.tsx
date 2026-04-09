@@ -71,16 +71,19 @@ export default function AppointmentFormPage() {
   }, [id, isEditing, reset]);
 
   async function onSubmit(data: any) {
+    const formattedTime =
+      data.hora.length === 5 ? `${data.hora}:00` : data.hora;
     setSaving(true);
     const payload = {
       title: data.titulo,
       date: data.fecha,
-      time: data.hora,
+      time: formattedTime,
       type: data.tipo,
       description: data.descripcion,
       pet_id: Number(data.id_mascota),
-      ...(data.propietario_id && { owner_id: Number(data.propietario_id) }),
     };
+
+    console.log("Enviando cita:", payload);
 
     try {
       if (isEditing && id) {
